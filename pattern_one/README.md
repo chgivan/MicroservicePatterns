@@ -1,4 +1,4 @@
 ## Data Parallelism
 
 # join & fork
-- master -> rabbitmq(join) -> microAdd ->  rabbitmq(reduce) -> master
+- master -> rabbitmq(join) -> worker ->  rabbitmq(reduce) -> master
