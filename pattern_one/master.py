@@ -16,11 +16,10 @@ min, max = 0, 100
 
 A = np.random.randint(low=min, high=max, size=size)
 chunks = np.array_split(A, chunks_num)
-idList = []
-replies = 0
+reduceMap = {}
 for chunk in chunks:
     id = str(uuid.uuid4())
-    idList.append(id)
+    reduceMap[id] = 0
     channel.basic_publish(
         exchange='',
         routing_key=queue_name,
@@ -30,14 +29,14 @@ for chunk in chunks:
             correlation_id=id
         )
     )
-    replies += 1
 print("Send chunks")
-print(results)
+
+replies = len(chunks)
 sum = 0
 def OnReply(ch, method, props, buffer):
+    global replies, sum
     print("Message")
-    if results.has_key(props.correlation_id):
-        results[props.correlation_id] =
+    if props.correlation_id in reduceMap:
         replies -= 1
         sum += pickle.loads(buffer)[0]
         print("OK")
@@ -49,3 +48,4 @@ channel.basic_consume(
 
 while replies > 0:
     connection.process_data_events()
+print(sum)

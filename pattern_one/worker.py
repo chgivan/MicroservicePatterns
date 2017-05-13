@@ -21,7 +21,9 @@ def callback(ch, method, prop, buffer):
         exchange='',
         routing_key=prop.reply_to,
         body=pickle.dumps(np.array([sum])),
-        properties=pika.BasicProperties()
+        properties=pika.BasicProperties(
+            correlation_id=prop.correlation_id 
+        )
     )
     ch.basic_ack(delivery_tag = method.delivery_tag)
 
