@@ -1,0 +1,19 @@
+version: '3'
+services:
+    redis:
+        image: redis:3.0
+        ports:
+         - "6379:6379"
+        networks:
+         - my_net
+    rabbitmq:
+        image: rabbitmq:3.6
+        ports:
+         - "4369:4369"
+         - "5671:5671"
+         - "5672:5672"
+         - "25672:25672"
+        networks:
+         - my_net
+networks:
+    my_net:

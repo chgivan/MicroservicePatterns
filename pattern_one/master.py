@@ -49,3 +49,4 @@ channel.basic_consume(
 while replies > 0:
     connection.process_data_events()
 print(sum)
+connection.close()
