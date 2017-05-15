@@ -1,0 +1,18 @@
+version: '3'
+services:
+    task1:
+        image: chgivan/task1:latest
+        networks:
+         - my_net
+    task2:
+        image: chgivan/task2:latest
+        networks:
+         - my_net
+    api_gateway:
+        image: chgivan/my_api_gateway:latest
+        ports:
+         - "80:80"
+        networks:
+         - my_net
+networks:
+    my_net:
