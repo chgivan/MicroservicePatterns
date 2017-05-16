@@ -1,8 +1,11 @@
 # MicroservicePatterns
 
 - Data Parallelism ( Fork & Join)
-- Task Parallelism ( API - Gateway )
-- Master - Worker
+- Task Parallelism
+- API - Gateway
+- Client - Server pull model
+- Master - Worker push model
+- Circuit Breaker
 - Load Balancing
 - Pipes & Filters
 - Parallelism Reduction ( Crawler )
