@@ -13,7 +13,7 @@ redisDB = redis.StrictRedis(host=host, port=port, db=db)
 def crawl(my_page):
     if redisDB.exists(my_page):
         return
-    
+
     try:
         with urllib.request.urlopen('http://www.uom.gr/') as response:
              parser = LinkHTMLParser()
