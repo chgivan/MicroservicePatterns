@@ -1,8 +1,8 @@
-import redis, json, urllib.request
-from utils import LinkHTMLParser
+import redis, json
+from utils import getLinks
 
 
-depth = 5
+maxdepth = 1
 depthCount = 0
 host = "192.168.99.100"
 port = 6379
@@ -10,27 +10,17 @@ db = 0
 
 redisDB = redis.StrictRedis(host=host, port=port, db=db)
 
-def crawl(my_page):
-    if redisDB.exists(my_page):
+def crawl(page, depth):
+    if depth > maxdepth:
         return
-
-    try:
-        with urllib.request.urlopen('http://www.uom.gr/') as response:
-             parser = LinkHTMLParser()
-             parser.feed(str(response.read()))
-             parser.close()
-             global new_links
-             new_links = parser.links
-    except Exception as e:
-        print (str(e))
+    if redisDB.exists(page):
         return
-    for page in input_pages[my_page]:
-        new_links.append(page)
-    redisDB.set(my_page, json.dumps(new_links))
-    for page in new_links:
-        crawl(page)
+    links = getLinks(page)
+    if links is None:
+        return
+    redisDB.set(page, json.dumps(links))
+    print("Passing " + str(depth))
+    for link in links:
+        crawl(link, depth + 1)
 
-crawl("index")
-
-print("Input Pages")
-print(input_pages)
+crawl("http://www.uom.gr/", 0)
