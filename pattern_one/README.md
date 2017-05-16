@@ -1,6 +1,27 @@
-## Data Parallelism
+## Fork & Join
 
-$ docker build -t chgivan/pattern_one_worker:latest -f BuildWorkerfile .
+### Build Worker
 
-# join & fork
-- master -> rabbitmq(join) -> worker ->  rabbitmq(reduce) -> master
+```sh
+docker build -f BuildWorkerfile -t chgivan/worker:latest .
+```
+
+### Build master
+``` sh
+pip install pika numpy
+```
+
+### Deploy
+``` sh
+docker stack deploy -c stack.yml fork_join
+```
+
+### Run
+``` sh
+python master.py <size> <chunks> <min> <max>
+```
+
+### Undeploy
+``` sh
+docker stack rm fork_join
+```

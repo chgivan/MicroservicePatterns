@@ -1,17 +1,17 @@
 version: '3'
 services:
     worker:
-        image: chgivan/pattern_one_worker:latest
+        image: chgivan/worker:latest
         deploy:
-            replicas: 1
+            replicas: 4
             resources:
                 limits:
-                  cpus: '0.1'
+                  cpus: '0.2'
                   memory: 50M
             restart_policy:
                 condition: on-failure
         networks:
-         - my-net
+         - my_net
     rabbitmq:
         image: rabbitmq:3.6
         ports:
@@ -20,6 +20,6 @@ services:
          - "5672:5672"
          - "25672:25672"
         networks:
-         - my-net
+         - my_net
 networks:
-    my-net:
+    my_net:
