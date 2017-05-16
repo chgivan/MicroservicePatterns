@@ -1,12 +1,16 @@
 
 ### Deploy
 
-'''sh
+```sh
     docker stack deploy -c stack.yml my_crawler
-'''
+```
 
 ## Run
-'''sh
-    import redis
-    r = redis.StrictRedis(host='192.168.99.100', port=6379, db=0)
-'''
+```sh
+    python crawler/run.py
+```
+
+## See Database
+```sh
+    python watcher.py
+```

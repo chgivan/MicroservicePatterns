@@ -1,15 +1,15 @@
 ### Build filter
-''' sh
+``` sh
 docker build -t chgivan/filter:latest ./filter/.
-'''
+```
 
 ### Deploy
-''' sh
+``` sh
 docker stack deploy -c stack.yml pipes_filters
-'''
+```
 
 ### RUN
-''' sh
+``` sh
 python pipe1.py
 python pipe2.py
-'''
+```
