@@ -38,8 +38,6 @@ def callback(ch, method, prop, buffer):
             properties=pika.BasicProperties()
         )
 
-
-channel.basic_qos(prefetch_count=1)
 channel.basic_consume(callback, queue=queue_name)
 channel.start_consuming()
 connection.close()
