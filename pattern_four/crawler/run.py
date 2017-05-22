@@ -1,26 +1,45 @@
-import redis, json
+import redis, json, pika
 from utils import getLinks
 
-
-maxdepth = 1
-depthCount = 0
 host = "192.168.99.100"
 port = 6379
 db = 0
 
 redisDB = redis.StrictRedis(host=host, port=port, db=db)
 
-def crawl(page, depth):
-    if depth > maxdepth:
+queue_name = "crawler"
+connection = pika.BlockingConnection(pika.ConnectionParameters(host=host))
+channel = connection.channel()
+channel.queue_declare(queue=queue_name, durable=True)
+print("Start crawler....")
+
+def callback(ch, method, prop, buffer):
+    body = json.loads(buffer)
+    depth = body.get("depth")
+    url = body.get("url")
+    maxdepth = body.get("maxdepth")
+
+    if depth > maxdepth or redisDB.exists(url):
+        ch.basic_ack(delivery_tag = method.delivery_tag)
         return
-    if redisDB.exists(page):
-        return
-    links = getLinks(page)
+
+    links = getLinks(url)
     if links is None:
+        ch.basic_ack(delivery_tag = method.delivery_tag)
         return
-    redisDB.set(page, json.dumps(links))
+
+    redisDB.set(url, json.dumps(links))
     print("Passing " + str(depth))
     for link in links:
-        crawl(link, depth + 1)
+        channel.basic_publish(
+            exchange='',
+            routing_key=queue_name,
+            body= json.dumps({"url":url,"depth":depth+1,"maxdepth":maxdepth}),
+            properties=pika.BasicProperties()
+        )
 
-crawl("http://www.uom.gr/", 0)
+
+channel.basic_qos(prefetch_count=1)
+channel.basic_consume(callback, queue=queue_name)
+channel.start_consuming()
+connection.close()

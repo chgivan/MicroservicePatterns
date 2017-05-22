@@ -1,5 +1,17 @@
 version: '3'
 services:
+    crawler:
+        image: crawler:latest
+        deploy:
+            replicas: 4
+            resources:
+                limits:
+                  cpus: '0.2'
+                  memory: 50M
+            restart_policy:
+                condition: on-failure
+        networks:
+         - my_net
     redis:
         image: redis:3.0
         ports:

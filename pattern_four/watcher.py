@@ -8,3 +8,4 @@ redisDB = redis.StrictRedis(host=host, port=port, db=db)
 
 for key in redisDB.keys("*"):
     print(str(key) + ":" + str(redisDB.get(key)))
+    print("New Page")
